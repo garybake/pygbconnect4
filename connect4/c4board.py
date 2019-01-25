@@ -29,7 +29,8 @@ class Board():
         self.num_cols = num_cols
         self._grid = {}  # dict of points
 
-    def place_piece(self, player, col):
+    def apply_move(self, player, move):
+        col = move.col
         high = self.find_highest_empty(col)
         if high is None:
             print('No room in column {}'.format(col))
@@ -37,7 +38,7 @@ class Board():
         else:
             point = Point(high, col)
             print('Applying at {}'.format(point))
-            self.apply_move(point, player)
+            self.place_piece(point, player)
 
     def find_highest_empty(self, col):
         for row in range(self.num_rows, 0, -1):
@@ -59,7 +60,7 @@ class Board():
             return None
         return player
 
-    def apply_move(self, point, player):
+    def place_piece(self, point, player):
         grid = self._grid
         if grid.get(point):
             print('Piece already at {}'.format(point))
