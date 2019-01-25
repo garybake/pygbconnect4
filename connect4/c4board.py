@@ -1,4 +1,6 @@
-from connect4.c4types import Point
+import copy
+
+from connect4.c4types import Point, Player
 
 
 class Move():
@@ -29,17 +31,6 @@ class Board():
         self.num_cols = num_cols
         self._grid = {}  # dict of points
 
-    def apply_move(self, player, move):
-        col = move.col
-        high = self.find_highest_empty(col)
-        if high is None:
-            print('No room in column {}'.format(col))
-            return False
-        else:
-            point = Point(high, col)
-            print('Applying at {}'.format(point))
-            self.place_piece(point, player)
-
     def find_highest_empty(self, col):
         for row in range(self.num_rows, 0, -1):
             potential_point = Point(row, col)
@@ -68,3 +59,46 @@ class Board():
         else:
             grid[point] = player
             return True
+
+
+class GameState():
+    """
+    Captures the current state of the game
+    Know about the board positions, next player, prev state and last move
+    """
+    def __init__(self, board, next_player, previous, move):
+        self.board = board
+        self.next_player = next_player
+        self.previous_state = previous
+        self.last_move = move
+
+    def apply_move(self, player, move):
+        if player != self.next_player:
+            raise ValueError(player)
+
+        col = move.col
+        next_board = copy.deepcopy(self.board)
+
+        high = self.board.find_highest_empty(col)
+        if high is None:
+            print('No room in column {}'.format(col))
+            return False
+        else:
+            point = Point(high, col)
+            print('Applying at {}'.format(point))
+            next_board.place_piece(point, player)
+        return GameState(next_board, player.other, self, move)
+
+    @classmethod
+    def new_game(cls, board_size):
+        """
+        Creates a new blank GameState
+        """
+        if isinstance(board_size, int):
+            board_size = (board_size, board_size)
+        board = Board(*board_size)
+        return GameState(board, Player.red, None, None)
+
+    def is_over(self):
+        # TODO
+        return False

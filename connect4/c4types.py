@@ -14,7 +14,7 @@ class Player(enum.Enum):
         """
         Switch player
         """
-        return Player.black if self == Player.white else Player.white
+        return Player.yellow if self == Player.red else Player.red
 
 
 class Point(namedtuple('Point', 'row col')):
