@@ -9,9 +9,7 @@ STONE_TO_CHAR = {
 
 
 def print_move(player, move):
-    move_str = '%s%d' % (COLS[move.point.col - 1], move.point.row)
-
-    print('%s %s' % (player, move_str))
+    print('{} drops at {}'.format(player, move.col))
 
 
 def print_board(board):
