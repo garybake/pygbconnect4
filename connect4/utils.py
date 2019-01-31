@@ -1,10 +1,16 @@
 from connect4 import c4types
 
+
+class Bcolor:
+    RESET = "\033[0;0m"
+    RED = "\033[1;41m"
+    YELLOW = '\033[43m'
+
 COLS = 'ABCDEFGHIJKLMNOPQRST'
 STONE_TO_CHAR = {
     None: ' . ',
-    c4types.Player.yellow: ' Y ',
-    c4types.Player.red: ' R '
+    c4types.Player.yellow: Bcolor.YELLOW + ' Y ' + Bcolor.RESET,
+    c4types.Player.red: Bcolor.RED + ' R ' + Bcolor.RESET,
 }
 
 
