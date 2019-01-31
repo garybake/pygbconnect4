@@ -60,6 +60,33 @@ class Board():
             grid[point] = player
             return True
 
+    def is_column_full(self, col):
+        """
+        Is a column full
+        """
+        head_point = Point(row=1, col=col)
+        if self.get(head_point):
+            return True
+        else:
+            return False
+
+    def get_full_cols(self):
+        """
+        Get a list of full columns on the board
+        """
+        full_cols = []
+        for col in range(1, self.num_cols+1):
+            if self.is_column_full(col):
+                full_cols.append(col)
+        return full_cols
+
+    def is_full(self):
+        """
+        Is the board full
+        - there are no spaces left at the top
+        """
+        return len(self.get_full_cols()) == self.num_cols
+
 
 class GameState():
     """
@@ -100,5 +127,18 @@ class GameState():
         return GameState(board, Player.red, None, None)
 
     def is_over(self):
-        # TODO
+        """
+        Is the game over
+        - Player wins
+        - No more places to play
+        """
         return False
+
+    def is_valid_move(self, move):
+        """
+        Is a move valid
+        - Is the column full
+        """
+        if self.board.is_column_full(move.col):
+            return False
+        return True
