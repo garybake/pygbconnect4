@@ -93,11 +93,12 @@ class GameState():
     Captures the current state of the game
     Know about the board positions, next player, prev state and last move
     """
-    def __init__(self, board, next_player, previous, move):
+    def __init__(self, board, next_player, previous, move, is_win=False):
         self.board = board
         self.next_player = next_player
         self.previous_state = previous
         self.last_move = move
+        self.is_win = is_win
 
     def apply_move(self, player, move):
         if player != self.next_player:
@@ -112,9 +113,12 @@ class GameState():
             return False
         else:
             point = Point(high, col)
-            print('Applying at {}'.format(point))
             next_board.place_piece(point, player)
-        return GameState(next_board, player.other, self, move)
+
+            if self.is_win_move(player, point):
+                self.is_win = True
+
+        return GameState(next_board, player.other, self, move, self.is_win)
 
     @classmethod
     def new_game(cls, board_size):
@@ -132,7 +136,9 @@ class GameState():
         - Player wins
         - No more places to play
         """
-        return False
+        if self.is_win:
+            print('****** {} WINS *****'.format(self.next_player.other))
+        return (self.is_win or self.board.is_full())
 
     def is_valid_move(self, move):
         """
@@ -142,3 +148,66 @@ class GameState():
         if self.board.is_column_full(move.col):
             return False
         return True
+
+    def is_win_move(self, player, point):
+        # TODO optimise this
+
+        # Check vertical
+        # Only need to check down
+        vert_count = 1
+        view_point = point.below()
+        while self.board.get(view_point) == player:
+            vert_count += 1
+            view_point = view_point.below()
+            if vert_count == 4:
+                return True
+
+        # Check horizontal
+        horiz_count = 1
+        view_point = point.left()
+        while self.board.get(view_point) == player:
+            horiz_count += 1
+            view_point = view_point.left()
+            if horiz_count == 4:
+                return True
+
+        view_point = point.right()
+        while self.board.get(view_point) == player:
+            horiz_count += 1
+            view_point = view_point.right()
+            if horiz_count == 4:
+                return True
+
+        # Check up_right
+        diagr_count = 1
+        view_point = point.above_right()
+        while self.board.get(view_point) == player:
+            diagr_count += 1
+            view_point = view_point.above_right()
+            if diagr_count == 4:
+                return True
+
+        view_point = point.below_left()
+        while self.board.get(view_point) == player:
+            diagr_count += 1
+            view_point = view_point.below_left()
+            if diagr_count == 4:
+                return True
+
+        # Check up_left
+        diagl_count = 1
+        view_point = point.above_left()
+        while self.board.get(view_point) == player:
+            diagl_count += 1
+            view_point = view_point.above_left()
+            if diagl_count == 4:
+                return True
+
+        view_point = point.below_right()
+        while self.board.get(view_point) == player:
+            diagl_count += 1
+            view_point = view_point.below_right()
+            if diagl_count == 4:
+                return True
+
+        return False

@@ -14,8 +14,7 @@ class RandomBot(Agent):
         for candidate in range(1, game_state.board.num_cols + 1):
             if game_state.is_valid_move(Move.play(candidate)):
                 candidates.append(candidate)
-            candidates.append(candidate)
         if not candidates:
             # todo board full, game over
-            pass
+            print('**No candidates')
         return Move.play(random.choice(candidates))

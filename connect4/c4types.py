@@ -23,13 +23,37 @@ class Point(namedtuple('Point', 'row col')):
     Has row and col attributes
     """
 
+    def above(self):
+        return Point(self.row - 1, self.col)
+
+    def below(self):
+        return Point(self.row + 1, self.col)
+
+    def left(self):
+        return Point(self.row, self.col - 1)
+
+    def right(self):
+        return Point(self.row, self.col + 1)
+
+    def above_left(self):
+        return Point(self.row - 1, self.col - 1)
+
+    def below_left(self):
+        return Point(self.row + 1, self.col - 1)
+
+    def above_right(self):
+        return Point(self.row - 1, self.col + 1)
+
+    def below_right(self):
+        return Point(self.row + 1, self.col + 1)
+
     def neighbors(self):
         """
         Returns the vertical and horizontal neighbours of a point
         """
         return [
-            Point(self.row - 1, self.col),
-            Point(self.row + 1, self.col),
-            Point(self.row, self.col - 1),
-            Point(self.row, self.col + 1)
+            self.above,
+            self.below,
+            self.left,
+            self.right
         ]

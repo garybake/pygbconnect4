@@ -8,8 +8,9 @@ from connect4.utils import print_board, print_move
 
 
 def main():
-    board_size = 9
-    game = c4board.GameState.new_game(board_size)
+    rows = 6
+    cols = 7
+    game = c4board.GameState.new_game((rows, cols))
 
     bots = {
         c4types.Player.red: naive.RandomBot(),
@@ -18,15 +19,14 @@ def main():
     go_num = 0
     while not game.is_over():
         # time.sleep(0.3)
-        print_board(game.board)
-
         bot_move = bots[game.next_player].select_move(game)
         player = game.next_player
         print_move(game.next_player, bot_move)
         game = game.apply_move(player, bot_move)
+        print_board(game.board)
 
         go_num += 1
-        if go_num > 30:
+        if go_num > 300:
             break
 
     print('Game over man!')
