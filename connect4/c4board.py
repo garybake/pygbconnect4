@@ -82,12 +82,12 @@ class GameState():
     Captures the current state of the game
     Know about the board positions, next player, prev state and last move
     """
-    def __init__(self, board, next_player, previous, move, is_win=False):
+    def __init__(self, board, next_player, previous, move, winner=None):
         self.board = board
         self.next_player = next_player
         self.previous_state = previous
         self.last_move = move
-        self.is_win = is_win
+        self.winner = winner
 
     def apply_move(self, player, move):
         if player != self.next_player:
@@ -105,9 +105,9 @@ class GameState():
             next_board.place_piece(point, player)
 
             if self.is_win_move(player, point):
-                self.is_win = True
+                self.winner = player
 
-        return GameState(next_board, player.other, self, move, self.is_win)
+        return GameState(next_board, player.other, self, move, self.winner)
 
     @classmethod
     def new_game(cls, board_size):
@@ -125,11 +125,11 @@ class GameState():
         - Player wins
         - No more places to play
         """
-        if self.is_win:
-            print('****** {} WINS ******'.format(self.next_player.other))
+        if self.winner:
+            print('****** {} WINS ******'.format(self.winner))
         if self.board.is_full():
             print('****** DRAW ******')
-        return (self.is_win or self.board.is_full())
+        return (self.winner is not None or self.board.is_full())
 
     def is_valid_move(self, move):
         """
@@ -139,6 +139,13 @@ class GameState():
         if self.board.is_column_full(move.col):
             return False
         return True
+
+    def legal_moves(self):
+        candidates = []
+        for candidate in range(1, self.board.num_cols + 1):
+            if self.is_valid_move(Move.play(candidate)):
+                candidates.append(candidate)
+        return candidates
 
     def is_win_move(self, player, point):
         # TODO optimise this

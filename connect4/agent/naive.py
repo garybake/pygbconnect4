@@ -10,11 +10,8 @@ class RandomBot(Agent):
         """
         Choose a random valid move thra preserves our own eyes
         """
-        candidates = []
-        for candidate in range(1, game_state.board.num_cols + 1):
-            if game_state.is_valid_move(Move.play(candidate)):
-                candidates.append(candidate)
-        if not candidates:
+        legal_moves = game_state.legal_moves()
+        if not legal_moves:
             # todo board full, game over
             print('**No candidates')
-        return Move.play(random.choice(candidates))
+        return Move.play(random.choice(legal_moves))
