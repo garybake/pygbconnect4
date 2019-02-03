@@ -52,6 +52,10 @@ class Board():
         return player
 
     def place_piece(self, point, player):
+        """
+        Add a point to the grid
+        Note this is adding at x,y and not dropping from the top
+        """
         grid = self._grid
         if grid.get(point):
             print('Piece already at {}'.format(point))
@@ -90,6 +94,10 @@ class GameState():
         self.winner = winner
 
     def apply_move(self, player, move):
+        """
+        Apply a move to the current state
+        Returns the next state of the game
+        """
         if player != self.next_player:
             raise ValueError(player)
 
@@ -125,10 +133,6 @@ class GameState():
         - Player wins
         - No more places to play
         """
-        if self.winner:
-            print('****** {} WINS ******'.format(self.winner))
-        if self.board.is_full():
-            print('****** DRAW ******')
         return (self.winner is not None or self.board.is_full())
 
     def is_valid_move(self, move):
@@ -141,6 +145,10 @@ class GameState():
         return True
 
     def legal_moves(self):
+        """
+        Return a list of valid moves
+        - List of columns that aren't full
+        """
         candidates = []
         for candidate in range(1, self.board.num_cols + 1):
             if self.is_valid_move(Move.play(candidate)):
@@ -148,7 +156,11 @@ class GameState():
         return candidates
 
     def is_win_move(self, player, point):
-        # TODO optimise this
+        """
+        TODO optimise this
+
+        Does a move result in a win for the player
+        """
 
         # Check vertical
         # Only need to check down

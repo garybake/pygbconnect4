@@ -27,5 +27,10 @@ def main():
         game = game.apply_move(player, bot_move)
         print_board(game.board)
 
+    if game.winner:
+        print('*** WINNER : {}'.format(game.winner))
+    else:
+        print('*** DRAW ***')
+
 if __name__ == '__main__':
     main()
