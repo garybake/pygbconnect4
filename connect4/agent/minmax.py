@@ -19,17 +19,14 @@ class MinMaxAgent(Agent):
 
         # Get a list of moves that won't setup a win for the other player
         possible_moves = self.eliminate_losing_moves(game_state, next_player)
-        print('Poss moves1: {}'.format(possible_moves))
-        # possible_moves = game_state.legal_moves()
 
         if not possible_moves:
             possible_moves = game_state.legal_moves()
             if not possible_moves:
                 # todo board full, game over
-                print('**No candidates')
+                print('*No move candidates')
             else:
-                print('**Expecting to loose')
-        print('Poss moves2: {}'.format(possible_moves))
+                print('*Expecting to loose')
         return Move.play(random.choice(possible_moves))
 
     def find_winning_move(self, game_state, next_player):
@@ -50,20 +47,14 @@ class MinMaxAgent(Agent):
         possible_moves = []  # list of moves to consider
         legal_moves = game_state.legal_moves()
         for candidate_move in legal_moves:
-            print('Checking move: {}'.format(candidate_move))
             # for all my possible moves
 
             # Calculate what the board will look like if I played this move
             next_state = game_state.apply_move(next_player, Move.play(candidate_move))
             opponent_winning_move = \
                 self.find_winning_move(next_state, opponent)
-            if opponent_winning_move:  # DEBUG
-                print('opponent can win here: {}'.format(opponent_winning_move))
-            else:
-                possible_moves.append(candidate_move)
-            # Does opponent can win from this state?
+            # Can opponent can win from this state?
             # if not then add the move to the list
-            # if not opponent_winning_move:
-            #     possible_moves.append(candidate_move)
-        print('Poss: {}'.format(possible_moves))
+            if not opponent_winning_move:
+                possible_moves.append(candidate_move)
         return possible_moves
