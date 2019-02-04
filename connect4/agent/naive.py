@@ -1,7 +1,7 @@
 import random
 
 from connect4.agent.base import Agent
-from connect4.c4board import Move
+from connect4.move import Move
 
 
 class RandomBot(Agent):

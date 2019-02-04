@@ -1,7 +1,7 @@
 import random
 
 from connect4.agent.base import Agent
-from connect4.c4board import Move
+from connect4.move import Move
 
 
 class MinMaxAgent(Agent):
@@ -50,7 +50,8 @@ class MinMaxAgent(Agent):
             # for all my possible moves
 
             # Calculate what the board will look like if I played this move
-            next_state = game_state.apply_move(next_player, Move.play(candidate_move))
+            next_state = game_state.apply_move(
+                next_player, Move.play(candidate_move))
             opponent_winning_move = \
                 self.find_winning_move(next_state, opponent)
             # Can opponent can win from this state?

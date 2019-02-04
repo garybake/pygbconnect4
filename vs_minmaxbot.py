@@ -3,14 +3,14 @@ import random
 
 from connect4.agent import minmax
 from connect4 import c4types
-from connect4 import c4board
+from connect4.gamestate import GameState
 from connect4.utils import print_board, print_move
 
 
 def main():
     rows = 6
     cols = 7
-    game = c4board.GameState.new_game((rows, cols))
+    game = GameState.new_game((rows, cols))
 
     bots = {
         c4types.Player.red: minmax.MinMaxAgent(),
