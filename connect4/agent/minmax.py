@@ -18,7 +18,10 @@ class MinMaxAgent(Agent):
             return Move.play(winning_move)
 
         # Get a list of moves that won't setup a win for the other player
-        possible_moves = self.eliminate_losing_moves(game_state, next_player)
+        # possible_moves = self.eliminate_losing_moves(game_state, next_player)
+        possible_moves = self.find_two_step_win(game_state, next_player)
+        if possible_moves is None:
+            possible_moves = self.eliminate_losing_moves(game_state, next_player)
 
         if not possible_moves:
             possible_moves = game_state.legal_moves()
@@ -27,6 +30,7 @@ class MinMaxAgent(Agent):
                 print('*No move candidates')
             else:
                 print('*Expecting to loose')
+
         return Move.play(random.choice(possible_moves))
 
     def find_winning_move(self, game_state, next_player):
@@ -43,7 +47,7 @@ class MinMaxAgent(Agent):
         """
         Avoid giving opponent a winning move on the next turn
         """
-        opponent = next_player.other  # red
+        opponent = next_player.other
         possible_moves = []  # list of moves to consider
         legal_moves = game_state.legal_moves()
         for candidate_move in legal_moves:
@@ -59,3 +63,13 @@ class MinMaxAgent(Agent):
             if not opponent_winning_move:
                 possible_moves.append(candidate_move)
         return possible_moves
+
+    def find_two_step_win(self, game_state, next_player):
+        opponent = next_player.other
+        legal_moves = game_state.legal_moves()
+        for candidate_move in legal_moves:
+            next_state = game_state.apply_move(next_player, Move.play(candidate_move))
+            good_responses = self.eliminate_losing_moves(next_state, opponent)
+            if not good_responses:
+                return candidate_move
+        return None
