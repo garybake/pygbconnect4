@@ -71,5 +71,5 @@ class MinMaxAgent(Agent):
             next_state = game_state.apply_move(next_player, Move.play(candidate_move))
             good_responses = self.eliminate_losing_moves(next_state, opponent)
             if not good_responses:
-                return candidate_move
+                return [candidate_move]
         return None
